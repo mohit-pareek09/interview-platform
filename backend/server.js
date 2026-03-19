@@ -353,6 +353,10 @@ io.on("connection", (socket) => {
     }, 1500);
   });
 
+  app.get("/health", (req, res) => {
+    res.json({ status: "ok" });
+  });
+
   socket.on("send_gd_message", async ({ roomId, text, speaker, topic }) => {
     // Echo the user's message
     io.to(roomId).emit("gd_message", {
