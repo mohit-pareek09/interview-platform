@@ -232,13 +232,13 @@ Format your response as a JSON object with these keys:
   }
 
   // Safety Check: If code is just placeholders, reject immediately
-  const cleanCode = code.replace(/#.*$/gm, "").trim(); 
+  const cleanCode = code.replace(/#.*$/gm, "").trim();
   const isTemplateOnly = cleanCode.split('\n').every(line => {
     const l = line.trim();
     return l === "" || l.startsWith("def ") || l === "pass" || l === "return" || l.startsWith("class ");
   });
 
-  if (isTemplateOnly && code.length < 250) { 
+  if (isTemplateOnly && code.length < 250) {
     return res.json({
       isSolved: false,
       status: "No Implementation Provided",
@@ -254,7 +254,7 @@ Format your response as a JSON object with these keys:
 
     const jsonMatch = aiText.match(/\{[\s\S]*\}/);
     const jsonStr = jsonMatch ? jsonMatch[0] : aiText;
-    
+
     try {
       const result = JSON.parse(jsonStr);
       console.log("Parsed AI result:", result);
@@ -267,7 +267,7 @@ Format your response as a JSON object with these keys:
         optimizationSuggestions: result.optimizationSuggestions ?? result.optimization_suggestions ?? result.optimization ?? "No optimization suggestions provided",
         hint: result.hint ?? ""
       };
-      
+
       res.json(normalized);
     } catch (parseErr) {
       console.error("JSON Parse Error:", parseErr);
@@ -316,7 +316,7 @@ Return ONLY a JSON object:
     const jsonMatch = aiText.match(/\{[\s\S]*\}/);
     const jsonStr = jsonMatch ? jsonMatch[0] : aiText;
     const result = JSON.parse(jsonStr);
-    
+
     res.json({
       overall: Math.min(100, Math.max(0, result.overallScore ?? result.overall ?? 50)),
       technical: Math.min(100, Math.max(0, result.technicalScore ?? result.technical ?? 50)),
