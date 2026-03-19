@@ -9,7 +9,7 @@ import { useStore } from '../store';
 export default function SetupPage() {
   const navigate = useNavigate();
   const { user, sessionConfig, setSessionConfig, setUser, logout } = useStore();
-  
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     logout();
@@ -19,21 +19,21 @@ export default function SetupPage() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [parsedText, setParsedText] = useState(sessionConfig.resumeText || '');
-  
+
   const [role, setRole] = useState(sessionConfig.role || 'Frontend Developer');
   const [company, setCompany] = useState(sessionConfig.company || '');
-  const [mode, setMode] = useState(sessionConfig.mode || 'technical'); 
+  const [mode, setMode] = useState(sessionConfig.mode || 'technical');
 
   const handleFileUpload = async (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
-    
+
     setFile(selectedFile);
     setUploading(true);
-    
+
     const formData = new FormData();
     formData.append('resume', selectedFile);
-    
+
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const res = await axios.post(`${apiUrl}/api/upload-resume`, formData);
@@ -41,6 +41,7 @@ export default function SetupPage() {
       setSessionConfig({ resumeText: res.data.text });
     } catch (error) {
       console.error("Resume upload failed", error);
+      console.log("API URL:", apiUrl);
       alert("Failed to parse resume.");
     } finally {
       setUploading(false);
@@ -69,16 +70,16 @@ export default function SetupPage() {
           <ChevronLeft size={24} />
         </button>
         <h1 className="text-xl font-bold ml-4">Setup Your Session</h1>
-        
+
         <div className="ml-auto flex items-center gap-3">
-          <button 
+          <button
             onClick={() => navigate('/profile')}
             className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg transition-all text-sm font-medium"
           >
             <User size={18} /> Profile
           </button>
-          
-          <button 
+
+          <button
             onClick={handleLogout}
             className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 px-4 py-2 rounded-lg transition-all text-sm font-medium border border-red-500/10"
           >
@@ -88,7 +89,7 @@ export default function SetupPage() {
       </div>
 
       <div className="max-w-2xl mx-auto mt-8 px-4">
-        
+
         {/* Resume Analysis */}
         <div className="mb-10">
           <h2 className="text-sm font-bold text-slate-400 tracking-wider mb-4 uppercase">Resume Analysis</h2>
@@ -98,12 +99,12 @@ export default function SetupPage() {
             </div>
             <h3 className="text-lg font-bold mb-2">Upload Resume</h3>
             <p className="text-slate-400 text-sm mb-6">Drag and drop your PDF here or browse files</p>
-            
+
             <label className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-medium transition inline-flex items-center gap-2">
               {uploading ? 'Processing...' : file ? file.name : 'Select PDF'}
               <input type="file" className="hidden" accept=".pdf" onChange={handleFileUpload} />
             </label>
-            
+
             {parsedText && (
               <div className="mt-4 text-green-400 text-sm">✓ Resume parsed successfully!</div>
             )}
@@ -113,11 +114,11 @@ export default function SetupPage() {
         {/* Interview Parameters */}
         <div className="mb-10">
           <h2 className="text-sm font-bold text-slate-400 tracking-wider mb-4 uppercase">Interview Parameters</h2>
-          
+
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-2">Job Role</label>
-              <select 
+              <select
                 value={role} onChange={(e) => setRole(e.target.value)}
                 className="w-full bg-[#131b2f] border border-slate-800 rounded-xl px-4 py-3 appearance-none focus:ring-2 focus:ring-blue-500 outline-none"
               >
@@ -131,8 +132,8 @@ export default function SetupPage() {
 
             <div>
               <label className="block text-sm font-medium mb-2">Target Company</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={company} onChange={(e) => setCompany(e.target.value)}
                 placeholder="e.g. Google, Meta, Startup..."
                 className="w-full bg-[#131b2f] border border-slate-800 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
@@ -142,7 +143,7 @@ export default function SetupPage() {
             <div>
               <label className="block text-sm font-medium mb-4">Select Interview Mode</label>
               <div className="space-y-3">
-                
+
                 {/* Mode Option: Technical */}
                 <label className={`cursor-pointer flex items-center p-4 rounded-xl border transition-all ${mode === 'technical' ? 'bg-blue-500/10 border-blue-500' : 'bg-[#131b2f] border-slate-800 hover:border-slate-600'}`}>
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center mr-4 ${mode === 'technical' ? 'bg-orange-500/20 text-orange-400' : 'bg-slate-800 text-slate-400'}`}>
@@ -205,7 +206,7 @@ export default function SetupPage() {
         </div>
 
         {/* Launch Button */}
-        <button 
+        <button
           onClick={handleLaunch}
           className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
         >
